@@ -1,0 +1,42 @@
+# =============================================================================
+# .dockerignore — Exclude files from Docker build context
+# =============================================================================
+
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# IDE / tool config
+.roo/
+.mcp-searxng/
+.vscode/
+.idea/
+.hf-venv/
+
+# Runtime outputs
+*.csv
+*.pt
+*.bin
+*.safetensors
+
+# Keep the local model cache available to Dockerfile COPY.
+!models/**/*.bin
+!models/**/*.safetensors
+models/**/.cache/
+
+# Documentation (not needed in image)
+README.md
+.env.example
+.env
+
+# Scripts directory is copied explicitly via COPY
+# but exclude any temp files
+scripts/*.tmp
+scripts/*.log

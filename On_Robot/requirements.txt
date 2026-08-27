@@ -1,0 +1,6 @@
+# RealSense capture dependencies used by sender.py and local_ai_viewer.py.
+numpy>=1.24.0
+pyrealsense2>=2.57.0
+
+# local_ai_viewer.py reuses the receiver GUI and AI stack in-process.
+-r ../On_Receiver/requirements.txt

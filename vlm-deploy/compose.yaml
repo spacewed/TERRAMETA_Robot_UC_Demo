@@ -1,0 +1,50 @@
+# =============================================================================
+# compose.yaml — vLLM server for Qwen3.6-35b-a3b
+# =============================================================================
+# Usage:
+#   docker compose up -d          # start
+#   docker compose logs -f        # follow logs
+#   docker compose down           # stop
+#
+# Requires .env file (see .env.example)
+# =============================================================================
+
+services:
+  vllm-server:
+    image: ${IMAGE_NAME:-vlm-qwen36-35b-a3b}:${IMAGE_TAG:-latest}
+    container_name: vllm-qwen36-35b-a3b
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    volumes:
+      - ./scripts/start-vllm.sh:/usr/local/bin/start-vllm.sh:ro
+    environment:
+      - MODEL_PATH=${MODEL_PATH:-/models/Qwen3.6-35B-A3B}
+      - SERVED_MODEL_NAME=${SERVED_MODEL_NAME:-qwen3.6-35b-a3b}
+      - HOST=${HOST:-0.0.0.0}
+      - PORT=${PORT:-8000}
+      - GPU_MEMORY_UTILIZATION=${GPU_MEMORY_UTILIZATION:-0.60}
+      - MAX_MODEL_LEN=${MAX_MODEL_LEN:-4096}
+      - MAX_NUM_SEQS=${MAX_NUM_SEQS:-8}
+      - PERFORMANCE_MODE=${PERFORMANCE_MODE:-interactivity}
+      - ENABLE_PREFIX_CACHING=${ENABLE_PREFIX_CACHING:-true}
+      - LIMIT_MM_PER_PROMPT=${LIMIT_MM_PER_PROMPT:-}
+      - DEFAULT_CHAT_TEMPLATE_KWARGS=${DEFAULT_CHAT_TEMPLATE_KWARGS:-}
+      - TENSOR_PARALLEL_SIZE=${TENSOR_PARALLEL_SIZE:-1}
+      - ENABLE_MTP=${ENABLE_MTP:-true}
+      - MTP_SPECULATIVE_TOKENS=${MTP_SPECULATIVE_TOKENS:-1}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    shm_size: "8g"
+    ipc: host
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:${PORT:-8000}/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 60s

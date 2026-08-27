@@ -1,0 +1,26 @@
+# IDE / tool config
+.roo/
+.mcp-searxng/
+
+# Python virtual environments
+venv/
+On_Receiver/venv/
+On_Robot/venv/
+
+# Python runtime outputs
+__pycache__/
+*.pyc
+
+# Receiver runtime outputs
+On_Receiver/receiver_30s_metrics*.csv
+On_Receiver/*.pt
+
+# Local VLM model artifacts downloaded for Docker builds
+vlm-deploy/models/
+vlm-deploy/.hf-venv/
+
+# Local environment file (use .env.example as template)
+vlm-deploy/.env
+
+# Transient ffmpeg palette file used during GIF generation
+assets/palette.png
